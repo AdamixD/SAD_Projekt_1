@@ -1,0 +1,59 @@
+---
+title: "Projekt 1"
+output: html_document
+date: "2022-11-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 0. Importing libraries
+
+```{r}
+library(ggplot2)
+library(glue)
+library(dplyr)
+```
+
+## 1. Importing data
+
+```{r}
+inflation_data <- read.csv("data/EU_Inflation_HICP_data_mod.csv", header = TRUE, sep = ",")
+deposits_data <- read.csv("data/EU_deposits_1yr_data_mod.csv", header = TRUE, sep = ",")
+```
+
+## 2. Converting date
+
+```{r}
+inflation_data$Period <- as.Date(inflation_data$Period, format = "%d/%m/%Y")
+deposits_data$Period <- as.Date(deposits_data$Period, format = "%d/%m/%Y")
+```
+
+## 3. Converting to numeric
+
+```{r}
+deposits_data[, 2:34] <- sapply(deposits_data[, 2:34], as.numeric)
+str(deposits_data)
+```
+
+## 4. Creating subsets
+
+```{r}
+eurozone_countries <- select(deposits_data, matches("Euro|Period"))
+other_countries <- select(deposits_data, !contains("Euro"))
+head(eurozone_countries)
+head(other_countries)
+```
+## 5. Data visualization
+
+```{r}
+country <- "Estonia"
+
+ggplot(data = inflation_data, aes(x = Period, y = inflation_data[ , country])) +
+  geom_bar(stat = "identity", fill = "purple") +
+  labs(title = glue("Inflation in {country}"),
+       x = "Date", y = "Inflation rate")
+```
+
+
