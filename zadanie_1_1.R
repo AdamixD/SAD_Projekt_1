@@ -132,21 +132,23 @@ plot_inflation_lines_country_multiple(eurozone_war_data, "Poziom inflacji w stre
                                       other_war_data, "Poziom inflacji poza strefą Euro od początku wojny")
 
 
+
 ### Box - Average inflation in period
 # Creating plot - since 2000
-plot_inflation_boxes(since_2000_data, "Poziom inflacji od 2000 roku")
+plot_inflation_boxes(since_2000_data, "Poziom inflacji od 2000 roku (uśredniona wartość w okresie)")
 
 # Creating plot - before pandemic
-plot_inflation_boxes(before_pandemic_data, "Poziom inflacji przed pandemią")
+plot_inflation_boxes(before_pandemic_data, "Poziom inflacji przed pandemią (uśredniona wartość w okresie)")
 
 # Creating plot -  pandemic
-plot_inflation_boxes(pandemic_data, "Poziom inflacji w szczycie pandemii")
+plot_inflation_boxes(pandemic_data, "Poziom inflacji w szczycie pandemii (uśredniona wartość w okresie)")
 
 # Creating plot - before war
-plot_inflation_boxes(before_war_data, "Poziom inflacji przed wojną")
+plot_inflation_boxes(before_war_data, "Poziom inflacji przed wojną (uśredniona wartość w okresie)")
 
 # Creating plot - war
-plot_inflation_boxes(war_data, "Poziom inflacji od początku wojny")
+plot_inflation_boxes(war_data, "Poziom inflacji od początku wojny (uśredniona wartość w okresie)")
+
 
 
 ### Box - Inflation in period
@@ -165,3 +167,32 @@ plot_inflation_boxes(inflation_before_war_data, "Poziom inflacji przed wojną")
 # Creating plot - war
 plot_inflation_boxes(inflation_war_data, "Poziom inflacji od początku wojny")
 
+
+
+### Summary
+# Eurozone
+summary_eurozone_since_2000 <- inflation_since_2000_data |> filter(origin == 'Kraje w strefie Euro') |> summary()
+summary_eurozone_before_pandemic <- inflation_before_pandemic_data |> filter(origin == 'Kraje w strefie Euro') |> summary()
+summary_eurozone_pandemic <- inflation_pandemic_data |> filter(origin == 'Kraje w strefie Euro') |> summary()
+summary_eurozone_before_war <- inflation_before_war_data |> filter(origin == 'Kraje w strefie Euro') |> summary()
+summary_eurozone_war_data <- inflation_war_data |> filter(origin == 'Kraje w strefie Euro') |> summary()
+
+summary_eurozone_since_2000[,3]
+summary_eurozone_before_pandemic[,3]
+summary_eurozone_pandemic[,3]
+summary_eurozone_before_war[,3]
+summary_eurozone_war_data[,3]
+
+
+# Other countries
+summary_other_since_2000 <- inflation_since_2000_data |> filter(origin == 'Kraje poza strefą Euro') |> summary()
+summary_other_before_pandemic <- inflation_before_pandemic_data |> filter(origin == 'Kraje poza strefą Euro') |> summary()
+summary_other_pandemic <- inflation_pandemic_data |> filter(origin == 'Kraje poza strefą Euro') |> summary()
+summary_other_before_war <- inflation_before_war_data |> filter(origin == 'Kraje poza strefą Euro') |> summary()
+summary_other_war_data <- inflation_war_data |> filter(origin == 'Kraje poza strefą Euro') |> summary()
+
+summary_other_since_2000[,3]
+summary_other_before_pandemic[,3]
+summary_other_pandemic[,3]
+summary_other_before_war[,3]
+summary_other_war_data[,3]
