@@ -44,7 +44,6 @@ inflation_avg <- data.frame(
   poland_inflation[2]
 )
 
-
 # Converting data to tidy form
 eurozone_countries_inflation_tidy <- eurozone_countries_inflation |> pivot_longer(-Period, names_to = "country", values_to = "inflation")
 other_countries_inflation_tidy <- other_countries_inflation |> pivot_longer(-Period, names_to = "country", values_to = "inflation")
@@ -54,6 +53,7 @@ inflation_avg_tidy <- inflation_avg |> pivot_longer(-Period, names_to = "origin"
 
 
 # Creating ranges of intervals
+since_2000 <- as.Date("01/01/2000", "%d/%m/%Y")
 before_pandemic <- as.Date("01/01/2018", "%d/%m/%Y")
 pandemic <- as.Date("01/03/2020", "%d/%m/%Y")
 before_war <- as.Date("01/02/2021", "%d/%m/%Y")
@@ -62,8 +62,23 @@ now <- as.Date("01/09/2022", "%d/%m/%Y")
 
 
 # Split data to intervals
+since_2000_data <- inflation_avg_tidy %>% filter(Period >= since_2000 & Period <= now)
 before_pandemic_data <- inflation_avg_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 pandemic_data <- inflation_avg_tidy %>% filter(Period >= pandemic & Period < before_war)
 before_war_data <- inflation_avg_tidy %>% filter(Period >= before_war & Period < war)
 war_data <- inflation_avg_tidy %>% filter(Period >= war & Period <= now)
+
+
+eurozone_since_2000_data <- eurozone_countries_inflation_tidy %>% filter(Period >= since_2000 & Period <= now)
+eurozone_before_pandemic_data <- eurozone_countries_inflation_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
+eurozone_pandemic_data <- eurozone_countries_inflation_tidy %>% filter(Period >= pandemic & Period < before_war)
+eurozone_before_war_data <- eurozone_countries_inflation_tidy %>% filter(Period >= before_war & Period < war)
+eurozone_war_data <- eurozone_countries_inflation_tidy %>% filter(Period >= war & Period <= now)
+
+
+other_since_2000_data <- other_countries_inflation_tidy %>% filter(Period >= since_2000 & Period <= now)
+other_before_pandemic_data <- other_countries_inflation_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
+other_pandemic_data <- other_countries_inflation_tidy %>% filter(Period >= pandemic & Period < before_war)
+other_before_war_data <- other_countries_inflation_tidy %>% filter(Period >= before_war & Period < war)
+other_war_data <- other_countries_inflation_tidy %>% filter(Period >= war & Period <= now)
 
