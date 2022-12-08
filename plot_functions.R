@@ -11,8 +11,8 @@ plot_rate_lines_avg <- function(data, title, type) {
     theme(
       legend.title = element_blank(),
       plot.title = element_text(size=18),
-      axis.title.x = element_text(size=14),
-      axis.title.y = element_text(size=14),
+      axis.title.x = element_text(size=12, face="bold"),
+      axis.title.y = element_text(size=12, face="bold"),
     )
 }
 
@@ -29,8 +29,8 @@ plot_rate_lines_country <- function(data, title, type) {
     theme(
       legend.title = element_blank(),
       plot.title = element_text(size=18),
-      axis.title.x = element_text(size=14),
-      axis.title.y = element_text(size=14),
+      axis.title.x = element_text(size=12, face="bold"),
+      axis.title.y = element_text(size=12, face="bold"),
     )
 }
 
@@ -46,7 +46,7 @@ plot_rate_boxes <- function(data, title, type) {
       legend.position = "none",
       plot.title = element_text(size=18),
       axis.title.x = element_blank(),
-      axis.title.y = element_text(size=14)
+      axis.title.y = element_text(size=12, face="bold")
     )
 }
 
@@ -59,30 +59,31 @@ plot_rate_lines_country_multiple <-  function(data1, title1, data2, title2, type
 plot_histogram_single <- function(data, title) {
   for (c in unique(data$country)) {
     sub_data <- data |> filter(country == c)
+    mean_val <- mean(sub_data$difference, na.rm=TRUE)
+    sd_val <- sd(sub_data$difference, na.rm=TRUE)
     plot <- sub_data |>
       ggplot(aes(difference, group=1, label=c)) +
-      geom_histogram(aes(y=..density..), binwidth=0.1, alpha=0.7, fill="#DCE319FF", color="#95D840FF") +
-      geom_density(alpha = 0.2, fill="#481567FF", color="#481567FF") +
-      stat_function(fun = dnorm, n = 101, args = list(mean = mean(sub_data$difference, na.rm=TRUE),
-                                                      sd = sd(sub_data$difference, na.rm=TRUE)),
-                    color="#aa1836", size=1) +
-      ggtitle(paste(title, " - ", c)) +
+      geom_histogram(aes(y=..density..), bins=30, alpha=0.7, fill="#DCE319FF", color="#95D840FF") +
+      geom_density(alpha = 0.2, fill="#481567FF", color="#8b1a89") +
+      stat_function(fun = dnorm, n = 101, args = list(mean = mean_val, sd = sd_val), color="#aa1836", size=1) +
+      ggtitle(label=paste(title, " - ", c), subtitle=paste("Rozkład normalny N(", signif(mean_val, 4), ", ", signif(sd_val, 4), ")")) +
       xlab("Różnica inflacji") + ylab( "Gęstość") +
       theme_ipsum() +
       theme(
         legend.title = element_blank(),
         plot.title = element_text(size=18),
-        axis.title.x = element_text(size=14),
-        axis.title.y = element_text(size=14),
+        plot.subtitle = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=12, face="bold"),
+        axis.title.y = element_text(size=12, face="bold"),
       )
-    print(plot)
+      print(plot)
   }
 }
 
 plot_histogram_multiple <- function(data, title) {
   data |>
     ggplot( aes(x=difference, fill=country, color=country)) +
-    geom_histogram(alpha=0.4, position = 'identity') +
+    geom_histogram(alpha=0.4, bins=30, position = 'identity') +
     scale_color_viridis(discrete = TRUE, alpha=0.6) +
     scale_fill_viridis(discrete = TRUE) +
     xlab("Różnica inflacji") + ylab("Liczba wystąpień") +
@@ -91,7 +92,7 @@ plot_histogram_multiple <- function(data, title) {
     theme(
       legend.title = element_blank(),
       plot.title = element_text(size=18),
-      axis.title.x = element_text(size=14),
-      axis.title.y = element_text(size=14),
+      axis.title.x = element_text(size=12, face="bold"),
+      axis.title.y = element_text(size=12, face="bold"),
     )
 }
