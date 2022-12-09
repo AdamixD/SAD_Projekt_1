@@ -36,11 +36,15 @@ poland_inflation <- select(inflation_data, matches("Period|Poland"))
 
 # -- Creating subsets (deposists)
 deposits_data <- subset(deposits_data, select=-c(Estonia..Estonian.kroon, Malta..Maltese.lira, Latvia..Latvian.lats, Lithuania..Lithuanian.litas, Slovakia..Slovak.koruna, Slovenia..Slovenian.tolar))
+
+for ( col in 2:ncol(deposits_data)){
+  colnames(deposits_data)[col] <-  gsub("\\..*","",colnames(deposits_data)[col])
+}
+
 eurozone_countries_deposits <- select(deposits_data, matches("Period|Austria|Belgium|Cyprus|Germany|Estonia|Spain|Finland|France|Greece|Ireland|Italy|Lithuania|Luxembourg|Latvia|Malta|Netherlands|Portugal|Slovenia|Slovakia"))
 other_countries_deposits <- select(deposits_data, matches("Period|Bulgaria|Czech|Denmark|Croatia|Hungary|Poland|Romania|Sweden"))
 all_countries_deposits <- deposits_data
 poland_deposits <- select(deposits_data, matches("Period|Poland"))
-
 
 
 # Creating subsets with average rate (inflation)
