@@ -146,3 +146,53 @@ summary_deposits_other_before_pandemic[,3]
 summary_deposits_other_pandemic[,3]
 summary_deposits_other_before_war[,3]
 summary_deposits_other_war_data[,3]
+
+
+
+###### Actual increase on a bank deposit (since selected year) - data preprocessing
+selected_countries <- c("Poland", "Germany", "Estonia", "Finland")
+start_value <- 100.0
+
+start_year <- as.Date("01/07/2010", "%d/%m/%Y")
+stop_year <- as.Date("01/07/2022", "%d/%m/%Y")
+
+actual_increase_inflation_data <- all_countries_inflation_tidy %>% filter(Period >= start_year & Period <= stop_year)
+actual_increase_deposit_data <- all_countries_deposits_tidy %>% filter(Period >= start_year & Period <= stop_year)
+
+actual_increase_inflation_data <- actual_increase_inflation_data %>% filter(country %in% selected_countries)
+actual_increase_deposit_data <- actual_increase_deposit_data %>% filter(country %in% selected_countries)
+
+actual_increase_inflation_data <- actual_increase_inflation_data %>% filter(months(Period) >= months(start_year) & months(Period) <= months(stop_year))
+actual_increase_deposit_data <- actual_increase_deposit_data %>% filter(months(Period) >= months(start_year) & months(Period) <= months(stop_year))
+
+actual_increase_data <- actual_increase_deposit_data
+actual_increase_data[, 3] <- actual_increase_deposit_data[, 3] - actual_increase_inflation_data[, 3]
+colnames(actual_increase_data)[3] <- "increase"
+
+
+actual_increase_data['real_value'] <- start_value
+actual_increase_data['simple_value'] <- start_value
+
+n_rows <- nrow(actual_increase_data)
+n_countries <- length(selected_countries)
+
+for (i in (n_rows-n_countries):1){
+  actual_increase_data[i, 4] <- actual_increase_data[i+n_countries, 4] * (actual_increase_data[i, 3]/100 + 1)
+  actual_increase_data[i, 5] <- actual_increase_data[i+n_countries, 5] * (actual_increase_deposit_data[i, 3]/100 + 1)
+}
+
+
+###### Visualization
+
+plot_actual_increase_lines(actual_increase_data,
+                           "Rzeczywista siła nabywcza waluty w danym kraju",
+                           "real_value")
+
+plot_actual_increase_lines(actual_increase_data,
+                           "Przyrost pieniędzy złożonych w ramach depozytu w danym kraju",
+                           "simple_value")
+
+
+plot_actual_increase_lines_two_types(actual_increase_data,
+                                     "Rzeczywista siła nabywcza waluty w danym kraju",
+                                     "Przyrost pieniędzy złożonych w ramach depozytu w danym kraju")
