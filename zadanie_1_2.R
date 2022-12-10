@@ -7,6 +7,9 @@ plot_rate_lines_avg(deposits_avg_since_2000_data, "Oprocentowanie depozytów od 
 # Creating plot - since 2005
 plot_rate_lines_avg(deposits_avg_since_2005_data, "Oprocentowanie depozytów od 2005 roku", "deposits")
 
+# Creating plot - since 2018
+plot_rate_lines_avg(deposits_avg_since_2018_data, "Oprocentowanie depozytów od 2018 roku", "deposits")
+
 # Creating plot - before pandemic
 plot_rate_lines_avg(deposits_avg_before_pandemic_data, "Oprocentowanie depozytów przed pandemią", "deposits")
 
@@ -219,3 +222,18 @@ plot_actual_increase_lines(actual_increase_data,
 plot_actual_increase_lines_two_types(actual_increase_data,
                                      "Wartość depozytu ulokowanego w banku w danym kraju",
                                      "Rzeczywista siła nabywcza depozytu ulokowanego w banku w danym kraju")
+
+
+
+all_countries_inflation_since_2012_data <- all_countries_inflation_tidy %>% filter(Period >= start_year & Period <= stop_year)
+all_countries_inflation_since_2012_data <- all_countries_inflation_since_2012_data %>% filter(country %in% selected_countries)
+
+all_countries_deposits_since_2012_data <- all_countries_deposits_tidy %>% filter(Period >= start_year & Period <= stop_year)
+all_countries_deposits_since_2012_data <- all_countries_deposits_since_2012_data %>% filter(country %in% selected_countries)
+
+
+ggarrange(
+  plot_rate_lines_selected_countries(all_countries_deposits_since_2012_data,"Oprocentowanie depozytów w wybranych krajach", "deposits"),
+  plot_rate_lines_selected_countries(all_countries_inflation_since_2012_data,"Poziom inflacji w wybranych krajach", "inflation"),
+  ncol = 1, nrow = 2
+)

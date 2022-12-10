@@ -18,3 +18,9 @@ inflation_diff_selected_countries_since_2000_data <- inflation_diff_selected_cou
 plot_histogram_single(inflation_diff_selected_countries_since_2000_data, "Histogram różnic poziomów inflacji z miesiąca na miesiąc od 2000 roku")
 
 
+
+# ### All countries
+# all_countries_inflation_since_2000_data <- all_countries_inflation_tidy %>% filter(Period >= since_2000 & Period <= now)
+# all_countries_inflation_since_2000_data <- all_countries_inflation_since_2000_data %>% filter(country %in% selected_countries)
+#
+# plot_rate_lines_selected_countries(all_countries_inflation_since_2000_data,"Poziom inflacji w wybranych krajach od 2000 roku", "inflation")

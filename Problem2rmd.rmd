@@ -296,7 +296,7 @@ plot <- function(data, title, countries, types) {
     data |>
         ggplot(aes(x=Period, y=cena, group=kraj, color=kraj)) +
         scale_color_viridis(discrete = TRUE, labels = countries) +
-        geom_line(size=1.5) +
+        geom_line(size=1.2) +
         guides(fill=guide_legend(title=NULL)) +
         xlab("Data") + ylab("HICP") +
         ggtitle(title) +

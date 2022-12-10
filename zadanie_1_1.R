@@ -4,6 +4,9 @@
 # Creating plot - since 2000
 plot_rate_lines_avg(inflation_avg_since_2000_data, "Poziom inflacji od 2000 roku", "inflation")
 
+# Creating plot - since 2018
+plot_rate_lines_avg(inflation_avg_since_2018_data, "Poziom inflacji od 2018 roku", "inflation")
+
 # Creating plot - before pandemic
 plot_rate_lines_avg(inflation_avg_before_pandemic_data, "Poziom inflacji przed pandemią", "inflation")
 

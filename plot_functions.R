@@ -59,6 +59,25 @@ plot_rate_lines_country_multiple <-  function(data1, title1, data2, title2, type
             ncol = 2, nrow = 1)
 }
 
+plot_rate_lines_selected_countries <- function(data, title, type) {
+  data |>
+      ggplot(aes(x=Period, y=if (type == "inflation") inflation else deposits, group=country, color=country)) +
+        scale_color_viridis(discrete = TRUE) +
+        geom_line(size=1.2) +
+        guides(fill=guide_legend(title=NULL)) +
+        xlab("Data") + ylab(if (type == "inflation") "Inflacja" else "Oprocentowanie depozytów") +
+        scale_x_date(date_labels = "%b-%Y") +
+        ggtitle(title) +
+        theme_ipsum() +
+        theme(
+          legend.title = element_blank(),
+          legend.text = element_text(size=12, face="bold"),
+          plot.title = element_text(size=18),
+          axis.title.x = element_text(size=12, face="bold"),
+          axis.title.y = element_text(size=12, face="bold"),
+        )
+}
+
 plot_actual_increase_lines <- function(data, title, type, start_value=100) {
   data |>
     ggplot(aes(x=Period, y=if (type == "real_value") real_value else simple_value, group=country, color=country)) +
@@ -93,10 +112,10 @@ plot_histogram_single <- function(data, title) {
     sd_val <- sd(sub_data$difference, na.rm=TRUE)
     plot <- sub_data |>
       ggplot(aes(difference, group=1, label=c)) +
-      geom_histogram(aes(y=..density..), bins=30, alpha=0.7, fill="#DCE319FF", color="#95D840FF") +
+      geom_histogram(aes(y=..density..), bins=0.1, alpha=0.7, fill="#DCE319FF", color="#95D840FF") +
       # geom_density(alpha = 0.2, fill="#481567FF", color="#8b1a89") +
       stat_function(fun = dnorm, n = 101, args = list(mean = mean_val, sd = sd_val), color="#aa1836", size=1) +
-      ggtitle(label=paste(title, " - ", c), subtitle=paste("Rozkład normalny N(", signif(mean_val, 4), ", ", signif(sd_val, 4), ")")) +
+      ggtitle(label=paste(title, " - ", c), subtitle=paste("Rozkład normalny N(", signif(mean_val, 4), ", ", signif(sd_val*sd_val, 4), ")")) +
       xlab("Różnica inflacji") + ylab( "Gęstość") +
       theme_ipsum() +
       theme(
