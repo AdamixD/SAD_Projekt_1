@@ -83,21 +83,21 @@ plot_rate_lines_country_multiple(eurozone_inflation_war_data, "Poziom inflacji w
 
 
 ### Box - Average inflation in period
-# Creating plot - since 2000
-plot_rate_boxes(inflation_avg_since_2000_data, "Poziom inflacji od 2000 roku (uśredniona wartość w okresie)", "inflation")
-
-# Creating plot - before pandemic
-plot_rate_boxes(inflation_avg_before_pandemic_data, "Poziom inflacji przed pandemią (uśredniona wartość w okresie)", "inflation")
-
-# Creating plot -  pandemic
-plot_rate_boxes(inflation_avg_pandemic_data, "Poziom inflacji w szczycie pandemii (uśredniona wartość w okresie)", "inflation")
-
-# Creating plot - before war
-plot_rate_boxes(inflation_avg_before_war_data, "Poziom inflacji przed wojną (uśredniona wartość w okresie)", "inflation")
-
-# Creating plot - war
-plot_rate_boxes(inflation_avg_war_data, "Poziom inflacji od początku wojny (uśredniona wartość w okresie)", "inflation")
-
+# # Creating plot - since 2000
+# plot_rate_boxes(inflation_avg_since_2000_data, "Poziom inflacji od 2000 roku (uśredniona wartość w okresie)", "inflation")
+#
+# # Creating plot - before pandemic
+# plot_rate_boxes(inflation_avg_before_pandemic_data, "Poziom inflacji przed pandemią (uśredniona wartość w okresie)", "inflation")
+#
+# # Creating plot -  pandemic
+# plot_rate_boxes(inflation_avg_pandemic_data, "Poziom inflacji w szczycie pandemii (uśredniona wartość w okresie)", "inflation")
+#
+# # Creating plot - before war
+# plot_rate_boxes(inflation_avg_before_war_data, "Poziom inflacji przed wojną (uśredniona wartość w okresie)", "inflation")
+#
+# # Creating plot - war
+# plot_rate_boxes(inflation_avg_war_data, "Poziom inflacji od początku wojny (uśredniona wartość w okresie)", "inflation")
+#
 
 
 ### Box - Inflation in period
