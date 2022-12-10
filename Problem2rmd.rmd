@@ -1,0 +1,877 @@
+---
+jupyter:
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir
+  language_info:
+    codemirror_mode: r
+    file_extension: .r
+    mimetype: text/x-r-source
+    name: R
+    pygments_lexer: r
+    version: 4.2.1
+  nbformat: 4
+  nbformat_minor: 5
+---
+
+::: {.cell .markdown pycharm="{\"name\":\"#%% md\\n\"}"}
+# Problem 2
+:::
+
+::: {.cell .code execution_count="1" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+library(glue)
+library(dplyr)
+library(readr)
+library(ggthemes)
+library(tidyr)
+library(hrbrthemes)
+library(viridis)
+library(ggplot2)
+library(ggpubr)
+library(lubridate)
+library(stringi)
+library(tidyverse)
+library(corrplot)
+```
+
+::: {.output .stream .stderr}
+    Warning message:
+    "pakiet 'glue' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'dplyr' został zbudowany w wersji R 4.2.2"
+
+    Dołączanie pakietu: 'dplyr'
+
+
+    Następujące obiekty zostały zakryte z 'package:stats':
+
+        filter, lag
+
+
+    Następujące obiekty zostały zakryte z 'package:base':
+
+        intersect, setdiff, setequal, union
+
+
+    Warning message:
+    "pakiet 'readr' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'ggthemes' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'tidyr' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'hrbrthemes' został zbudowany w wersji R 4.2.2"
+    NOTE: Either Arial Narrow or Roboto Condensed fonts are required to use these themes.
+
+          Please use hrbrthemes::import_roboto_condensed() to install Roboto Condensed and
+
+          if Arial Narrow is not on your system, please see https://bit.ly/arialnarrow
+
+    Warning message:
+    "pakiet 'viridis' został zbudowany w wersji R 4.2.2"
+    Ładowanie wymaganego pakietu: viridisLite
+
+    Warning message:
+    "pakiet 'viridisLite' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'ggplot2' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'ggpubr' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'lubridate' został zbudowany w wersji R 4.2.2"
+    Ładowanie wymaganego pakietu: timechange
+
+    Warning message:
+    "pakiet 'timechange' został zbudowany w wersji R 4.2.2"
+
+    Dołączanie pakietu: 'lubridate'
+
+
+    Następujące obiekty zostały zakryte z 'package:base':
+
+        date, intersect, setdiff, union
+
+
+    Warning message:
+    "pakiet 'tidyverse' został zbudowany w wersji R 4.2.2"
+    ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.2 ──
+    ✔ tibble  3.1.8     ✔ stringr 1.5.0
+    ✔ purrr   0.3.5     ✔ forcats 0.5.2
+    Warning message:
+    "pakiet 'tibble' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'purrr' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'stringr' został zbudowany w wersji R 4.2.2"
+    Warning message:
+    "pakiet 'forcats' został zbudowany w wersji R 4.2.2"
+    ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ✖ lubridate::as.difftime() masks base::as.difftime()
+    ✖ lubridate::date()        masks base::date()
+    ✖ dplyr::filter()          masks stats::filter()
+    ✖ lubridate::intersect()   masks base::intersect()
+    ✖ dplyr::lag()             masks stats::lag()
+    ✖ lubridate::setdiff()     masks base::setdiff()
+    ✖ lubridate::union()       masks base::union()
+    Warning message:
+    "pakiet 'corrplot' został zbudowany w wersji R 4.2.2"
+    corrplot 0.92 loaded
+:::
+:::
+
+::: {.cell .code execution_count="2" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+mieso <- read.csv("data/mieso.csv", header = TRUE, sep = ",")
+nabial <- read.csv("data/nabial.csv", header = TRUE, sep = ",")
+pieczywo <- read.csv("data/pieczywo.csv", header = TRUE, sep = ",")
+slodycze <- read.csv("data/slodycze.csv", header = TRUE, sep = ",")
+oleje_i_tluszcze <- read.csv("data/tluszcze.csv", header = TRUE, sep = ",")
+warzywa <- read.csv("data/warzywa.csv", header = TRUE, sep = ",")
+```
+:::
+
+::: {.cell .code execution_count="3" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# glue(head(mieso_tidy$cena, n= 100), head(nabial_tidy$cena, n= 100))
+```
+:::
+
+::: {.cell .code execution_count="4" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+rows = 120
+
+#create data frame with 0 rows and 3 columns
+df_cor <- data.frame(matrix(ncol = 6, nrow = rows))
+
+#provide column names
+colnames(df_cor) <- c('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa')
+```
+:::
+
+::: {.cell .code execution_count="5" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# tidy
+mieso_tidy <- mieso |> pivot_longer(-Period, names_to = "kraj", values_to = "cena")
+nabial_tidy <- nabial |> pivot_longer(-Period, names_to = "kraj", values_to = "cena")
+pieczywo_tidy <- pieczywo |> pivot_longer(-Period, names_to = "kraj", values_to = "cena")
+slodycze_tidy <- slodycze |> pivot_longer(-Period, names_to = "kraj", values_to = "cena")
+oleje_i_tluszcze_tidy <- oleje_i_tluszcze |> pivot_longer(-Period, names_to = "kraj", values_to = "cena")
+warzywa_tidy <- warzywa |> pivot_longer(-Period, names_to = "kraj", values_to = "cena")
+```
+:::
+
+::: {.cell .code execution_count="6" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+df_cor['mieso'] = head(mieso_tidy$cena, n = rows)
+df_cor['nabial'] = head(nabial_tidy$cena, n = rows)
+df_cor['pieczywo'] = head(pieczywo_tidy$cena, n = rows)
+df_cor['slodycze'] = head(slodycze_tidy$cena, n = rows)
+df_cor['oleje_i_tluszcze'] = head(oleje_i_tluszcze_tidy$cena, n = rows)
+df_cor['warzywa'] = head(warzywa_tidy$cena, n = rows)
+```
+:::
+
+::: {.cell .code execution_count="7" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+cor_matrix = cor(df_cor)
+```
+:::
+
+::: {.cell .code execution_count="8" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+cor_matrix
+```
+
+::: {.output .display_data}
+```{=html}
+<table class="dataframe">
+<caption>A matrix: 6 × 6 of type dbl</caption>
+<thead>
+	<tr><th></th><th scope=col>mieso</th><th scope=col>nabial</th><th scope=col>pieczywo</th><th scope=col>slodycze</th><th scope=col>oleje_i_tluszcze</th><th scope=col>warzywa</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>mieso</th><td>1.0000000</td><td>0.8137444</td><td>0.8096958</td><td>0.7899341</td><td>0.8063177</td><td>0.7023614</td></tr>
+	<tr><th scope=row>nabial</th><td>0.8137444</td><td>1.0000000</td><td>0.8728564</td><td>0.8109337</td><td>0.8348154</td><td>0.7663287</td></tr>
+	<tr><th scope=row>pieczywo</th><td>0.8096958</td><td>0.8728564</td><td>1.0000000</td><td>0.8757372</td><td>0.7332492</td><td>0.8355307</td></tr>
+	<tr><th scope=row>slodycze</th><td>0.7899341</td><td>0.8109337</td><td>0.8757372</td><td>1.0000000</td><td>0.7526179</td><td>0.8101646</td></tr>
+	<tr><th scope=row>oleje_i_tluszcze</th><td>0.8063177</td><td>0.8348154</td><td>0.7332492</td><td>0.7526179</td><td>1.0000000</td><td>0.6157905</td></tr>
+	<tr><th scope=row>warzywa</th><td>0.7023614</td><td>0.7663287</td><td>0.8355307</td><td>0.8101646</td><td>0.6157905</td><td>1.0000000</td></tr>
+</tbody>
+</table>
+```
+:::
+:::
+
+::: {.cell .code execution_count="67" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+corrplot(cor_matrix, method="color")
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/f02f13f72504b0b84c66072468918778481d8dc9.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="10" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# type column
+mieso_tidy["typ"] = "mieso"
+nabial_tidy["typ"] = "nabial"
+pieczywo_tidy["typ"] = "pieczywo"
+slodycze_tidy["typ"] = "slodycze"
+oleje_i_tluszcze_tidy["typ"] = "oleje_i_tluszcze"
+warzywa_tidy["typ"] = "warzywa"
+```
+:::
+
+::: {.cell .code execution_count="11" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# Concatenate the dataframes
+zywnosc_tidy <- rbind(mieso_tidy, nabial_tidy, pieczywo_tidy, slodycze_tidy, oleje_i_tluszcze_tidy, warzywa_tidy)
+```
+:::
+
+::: {.cell .code execution_count="12" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Jan", replacement = "01")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Feb", replacement = "02")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Mar", replacement = "03")
+
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Apr", replacement = "04")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "May", replacement = "05")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Jun", replacement = "06")
+
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Jul", replacement = "07")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Aug", replacement = "08")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Sep", replacement = "09")
+
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Oct", replacement = "10")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Nov", replacement = "11")
+zywnosc_tidy$Period <- lapply(zywnosc_tidy$Period, gsub, pattern = "Dec", replacement = "12")
+
+zywnosc_tidy$Period <- sub("^", "01", zywnosc_tidy$Period )
+```
+:::
+
+::: {.cell .code execution_count="13" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# data
+zywnosc_tidy$Period <- as.Date(zywnosc_tidy$Period, format = "%d%Y%m")
+```
+:::
+
+::: {.cell .code execution_count="14" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+head(zywnosc_tidy)
+```
+
+::: {.output .display_data}
+```{=html}
+<table class="dataframe">
+<caption>A tibble: 6 × 4</caption>
+<thead>
+	<tr><th scope=col>Period</th><th scope=col>kraj</th><th scope=col>cena</th><th scope=col>typ</th></tr>
+	<tr><th scope=col>&lt;date&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>2022-10-01</td><td>Austria                  </td><td>130.72</td><td>mieso</td></tr>
+	<tr><td>2022-10-01</td><td>Belgium                  </td><td>121.85</td><td>mieso</td></tr>
+	<tr><td>2022-10-01</td><td>Bulgaria                 </td><td>152.40</td><td>mieso</td></tr>
+	<tr><td>2022-10-01</td><td>Cyprus                   </td><td>112.24</td><td>mieso</td></tr>
+	<tr><td>2022-10-01</td><td>Czech.Republic           </td><td>143.50</td><td>mieso</td></tr>
+	<tr><td>2022-10-01</td><td>EU..changing.composition.</td><td>130.05</td><td>mieso</td></tr>
+</tbody>
+</table>
+```
+:::
+:::
+
+::: {.cell .code execution_count="15" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot <- function(data, title, countries, types) {
+    data = filter(data, typ %in% types)
+    data |>
+        ggplot(aes(x=Period, y=cena, group=kraj, color=kraj)) +
+        scale_color_viridis(discrete = TRUE, labels = countries) +
+        geom_line(size=1.5) +
+        guides(fill=guide_legend(title=NULL)) +
+        xlab("Data") + ylab("HICP") +
+        ggtitle(title) +
+        theme_ipsum() +
+        scale_x_date(date_labels = "%b-%Y") +
+        theme(
+            legend.title = element_blank(),
+            plot.title = element_text(size=18),
+            axis.title.x = element_text(size=14),
+            axis.title.y = element_text(size=14),
+                text=element_text(family="CM Roman", size=21)
+        )
+}
+```
+:::
+
+::: {.cell .markdown}
+# HICP total
+:::
+
+::: {.cell .code execution_count="16" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+hicp_total <- read.csv("data/HICP_food.csv", header = TRUE, sep = ",")
+```
+:::
+
+::: {.cell .code execution_count="17" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+hicp_total = head(tail(hicp_total, n=nrow(hicp_total) - 1), 300)
+```
+:::
+
+::: {.cell .code execution_count="18" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+hicp_total$Slovenia <- sapply(hicp_total$Slovenia, as.numeric)
+```
+:::
+
+::: {.cell .code execution_count="19" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# hicp total to tidy
+hicp_total_tidy = hicp_total |> pivot_longer(-Period, names_to = "kraj", values_to = "hicp_total")
+```
+:::
+
+::: {.cell .code execution_count="20" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Jan", replacement = "01")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Feb", replacement = "02")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Mar", replacement = "03")
+
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Apr", replacement = "04")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "May", replacement = "05")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Jun", replacement = "06")
+
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Jul", replacement = "07")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Aug", replacement = "08")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Sep", replacement = "09")
+
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Oct", replacement = "10")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Nov", replacement = "11")
+hicp_total_tidy$Period <- lapply(hicp_total_tidy$Period, gsub, pattern = "Dec", replacement = "12")
+
+hicp_total_tidy$Period <- sub("^", "01", hicp_total_tidy$Period )
+```
+:::
+
+::: {.cell .code execution_count="21" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+hicp_total_tidy$Period <- as.Date(hicp_total_tidy$Period, format = "%d%Y%m")
+```
+:::
+
+::: {.cell .code execution_count="22" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+hicp_total_tidy$kraj <- sub("^", "HICP_", hicp_total_tidy$kraj )
+```
+:::
+
+::: {.cell .code execution_count="23" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+head(hicp_total_tidy)
+```
+
+::: {.output .display_data}
+```{=html}
+<table class="dataframe">
+<caption>A tibble: 6 × 3</caption>
+<thead>
+	<tr><th scope=col>Period</th><th scope=col>kraj</th><th scope=col>hicp_total</th></tr>
+	<tr><th scope=col>&lt;date&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>2022-09-01</td><td>HICP_Austria                  </td><td>124.17</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Belgium                  </td><td>120.05</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Bulgaria                 </td><td>150.49</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Cyprus                   </td><td>114.95</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Czech.Republic           </td><td>138.00</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_EU..changing.composition.</td><td>127.79</td></tr>
+</tbody>
+</table>
+```
+:::
+:::
+
+::: {.cell .code execution_count="24" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+countries = c('France', 'Hungary', 'Poland', 'Romania')
+# countries = c('France')
+```
+:::
+
+::: {.cell .code execution_count="25" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+countries_hicp_total = paste("HICP_", countries, sep="")
+countries_hicp_total
+```
+
+::: {.output .display_data}
+```{=html}
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class=list-inline><li>'HICP_France'</li><li>'HICP_Hungary'</li><li>'HICP_Poland'</li><li>'HICP_Romania'</li></ol>
+```
+:::
+:::
+
+::: {.cell .code execution_count="26" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+picks_hicp_total_tidy = filter(hicp_total_tidy, kraj %in% countries_hicp_total)
+```
+:::
+
+::: {.cell .code execution_count="27" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_with_hicp_total <- function(data, title, countries, types, hicp_data, countries_hicp_total) {
+    data = filter(data, typ %in% types)
+    
+    ggplot() +
+    # geom_line(size=1.5) +
+    geom_line(data = hicp_data, aes(x=Period, y=hicp_total, group=kraj, color=kraj), size = 1) + 
+    geom_line(data = data, aes(x=Period, y=cena, group=kraj, color=kraj), size = 1) +
+    scale_color_viridis(discrete = TRUE) +
+    guides(fill=guide_legend(title=NULL)) +
+    xlab("Data") + ylab("HICP") +
+    ggtitle(title) +
+    theme_ipsum() +
+    scale_x_date(date_labels = "%b-%Y") +
+    theme(
+        legend.title = element_blank(),
+        plot.title = element_text(size=18),
+        axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14),
+            text=element_text(family="CM Roman", size=21)
+    )
+    
+}
+```
+:::
+
+::: {.cell .code execution_count="28" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_for_country <- function(data, title, countries, types) {
+    data = filter(data, typ %in% types)
+    data |>
+        ggplot(aes(x=Period, y=cena, group=typ, color=typ)) +
+        scale_color_viridis(discrete = TRUE, labels = types) +
+        geom_line(size=1.5) +
+        guides(fill=guide_legend(title=NULL)) +
+        xlab("Data") + ylab("HICP") +
+        ggtitle(title) +
+        theme_ipsum() +
+        scale_x_date(date_labels = "%b-%Y") +
+        theme(
+            legend.title = element_blank(),
+            plot.title = element_text(size=18),
+            axis.title.x = element_text(size=14),
+            axis.title.y = element_text(size=14),
+                text=element_text(family="CM Roman", size=21)
+        )
+}
+```
+:::
+
+::: {.cell .code execution_count="29" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_for_country_with_hicp <- function(data, title, countries, types, hicp_data, countries_hicp_total) {
+    data = filter(data, typ %in% types)
+    
+    ggplot() +
+    geom_line(size=1.5) +
+    geom_line(data = data, aes(x=Period, y=cena, group=typ, color=typ)) +
+    scale_color_viridis(discrete = TRUE, labels = types) +
+    guides(fill=guide_legend(title=NULL)) +
+    xlab("Data") + ylab("HICP") +
+    ggtitle(title) +
+    theme_ipsum() +
+    scale_x_date(date_labels = "%b-%Y") +
+    theme(
+        legend.title = element_blank(),
+        plot.title = element_text(size=18),
+        axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14),
+            text=element_text(family="CM Roman", size=21)
+    )
+}
+```
+:::
+
+::: {.cell .code execution_count="30" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+options(repr.plot.width=12, repr.plot.height=10)
+options(warn=-1)
+```
+:::
+
+::: {.cell .code execution_count="31" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# Creating ranges of intervals
+since2012 <- as.Date("01/01/2012", "%d/%m/%Y")
+before_pandemic <- as.Date("01/01/2018", "%d/%m/%Y")
+pandemic <- as.Date("01/03/2020", "%d/%m/%Y")
+before_war <- as.Date("01/02/2021", "%d/%m/%Y")
+war <- as.Date("01/02/2022", "%d/%m/%Y")
+now <- as.Date("01/09/2022", "%d/%m/%Y")
+```
+:::
+
+::: {.cell .code execution_count="32" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+picks_tidy = filter(zywnosc_tidy, kraj %in% countries)
+```
+:::
+
+::: {.cell .code execution_count="33"}
+``` {.R}
+picks_tidy = picks_tidy%>% filter(Period >= since2012)
+```
+:::
+
+::: {.cell .code execution_count="34" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+before_pandemic_data <- picks_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
+pandemic_data <- picks_tidy %>% filter(Period >= pandemic & Period < before_war)
+before_war_data <- picks_tidy %>% filter(Period >= before_war & Period < war)
+war_data <- picks_tidy %>% filter(Period >= war & Period <= now)
+```
+:::
+
+::: {.cell .code execution_count="35" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+before_pandemic_hicp <- hicp_total_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
+pandemic_data_hicp <- hicp_total_tidy %>% filter(Period >= pandemic & Period < before_war)
+before_war_data_hicp <- hicp_total_tidy %>% filter(Period >= before_war & Period < war)
+war_data_hicp <- hicp_total_tidy %>% filter(Period >= war & Period <= now)
+```
+:::
+
+::: {.cell .code execution_count="36" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+picks_before_pandemic_hicp_total = picks_hicp_total_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
+picks_pandemic_data_hicp_total = picks_hicp_total_tidy %>% filter(Period >= pandemic & Period < before_war)
+picks_before_war_data_hicp_total = picks_hicp_total_tidy %>% filter(Period >= before_war & Period < war)
+picks_war_data_hicp_total = picks_hicp_total_tidy %>% filter(Period >= war & Period <= now)
+```
+:::
+
+::: {.cell .code execution_count="37"}
+``` {.R}
+picks_hicp_total_tidy = picks_hicp_total_tidy %>% filter(Period >=since2012)
+```
+:::
+
+::: {.cell .code execution_count="38"}
+``` {.R}
+zywnosc_tidy = zywnosc_tidy %>% filter(Period >=since2012)
+```
+:::
+
+::: {.cell .markdown}
+# Poland vs other countries in every category
+:::
+
+::: {.cell .code execution_count="39"}
+``` {.R}
+plot(picks_tidy, "Cały okres - mięso", countries, c('mieso'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/704096445544a0f68020332dbe83adbafecf2bc5.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="40"}
+``` {.R}
+plot(picks_tidy, "Cały okres - nabiał", countries, c('nabial'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/18efe6459828439b1c6635e93194b1aa441e64d9.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="41"}
+``` {.R}
+plot(picks_tidy, "Cały okres - pieczywo", countries, c('pieczywo'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/e115150d31dd9b4e8f7a34fcf7d465a06d55181b.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="42"}
+``` {.R}
+plot(picks_tidy, "Cały okres - słodycze", countries, c('slodycze'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/0d3f04c0333cd3cfec4b71502ec0301dff5af719.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="43"}
+``` {.R}
+plot(picks_tidy, "Cały okres - oleje i tłuszcze", countries, c('oleje_i_tluszcze'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/327efdcc5d31e743039c77305e5028bb3cda20a4.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="44"}
+``` {.R}
+plot(picks_tidy, "Cały okres - warzywa", countries, c('warzywa'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/b86d3dd4742d259c2ba0bf3672af6aaf26278c1b.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .markdown}
+# Poland vs other countries for different periods - meat only
+:::
+
+::: {.cell .code execution_count="45"}
+``` {.R}
+plot(before_pandemic_data, "Przed pandemią", countries, c('mieso'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/cdeb581dc453d2fefa97f629f8151741c3d660b2.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="46"}
+``` {.R}
+plot(pandemic_data, "Szczyt pandemii", countries, c('mieso'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/a91bc2d6f84e83ef270d088a46a5fe870bd3e24c.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="47"}
+``` {.R}
+plot(before_war_data, "Rok przed wojną", countries, c('mieso'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/c230b83fe9eee07a1614e7409272937a300dab53.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="48"}
+``` {.R}
+plot(war_data, "Tuż po inwazji na Ukrainę", countries, c('mieso'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/7e4fd2c7a882f6141b313fd728db48aace70e8e1.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .markdown}
+# Poland vs other countries including total food HICP
+:::
+
+::: {.cell .code execution_count="49" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_with_hicp_total(picks_tidy, "Caly okres", countries, c('mieso'), picks_hicp_total_tidy, countries_hicp)
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/151cc1b320039e512c4e44f9f43b594359d838a0.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="50"}
+``` {.R}
+plot_with_hicp_total(picks_tidy, "Caly okres", countries, c('mieso'), picks_hicp_total_tidy, countries_hicp)
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/151cc1b320039e512c4e44f9f43b594359d838a0.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="51" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_with_hicp_total(before_pandemic_data, "Przed pandemią", countries, c('mieso'), picks_before_pandemic_hicp_total, countries_hicp)
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/13ddee5b162b406e5850d4addae201e0cff3d368.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="52" pycharm="{\"name\":\"#%%\\n\"}" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_with_hicp_total(pandemic_data, "Szczyt pandemii", countries, c('mieso'), picks_pandemic_data_hicp_total, countries_hicp)
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/350d3a8b923870adf0fce3bf3563a21dd989e67c.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="53" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_with_hicp_total(before_war_data, "Rok przed wojną", countries, c('mieso'), picks_before_war_data_hicp_total, countries_hicp)
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/d72f86961dfc0b68c19a64835cdf492d50fa8f77.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="54" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+plot_with_hicp_total(war_data, "Tuż po inwazji na Ukrainę", countries, c('mieso'), picks_war_data_hicp_total, countries_hicp)
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/629e7f53b3379e4034553836fe9bf8d4a4ed1a9d.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .markdown tags="[]"}
+# Plots for Poland only
+:::
+
+::: {.cell .code execution_count="55" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+country = c('Poland')
+country_hicp = c('HICP_Poland')
+country_hicp_tidy = filter(hicp_total_tidy, kraj %in% country)
+```
+:::
+
+::: {.cell .code execution_count="56" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+head(hicp_total_tidy)
+```
+
+::: {.output .display_data}
+```{=html}
+<table class="dataframe">
+<caption>A tibble: 6 × 3</caption>
+<thead>
+	<tr><th scope=col>Period</th><th scope=col>kraj</th><th scope=col>hicp_total</th></tr>
+	<tr><th scope=col>&lt;date&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>2022-09-01</td><td>HICP_Austria                  </td><td>124.17</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Belgium                  </td><td>120.05</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Bulgaria                 </td><td>150.49</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Cyprus                   </td><td>114.95</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_Czech.Republic           </td><td>138.00</td></tr>
+	<tr><td>2022-09-01</td><td>HICP_EU..changing.composition.</td><td>127.79</td></tr>
+</tbody>
+</table>
+```
+:::
+:::
+
+::: {.cell .code execution_count="57" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+# ('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa')
+data_for_country = filter(zywnosc_tidy, kraj %in% country)
+plot_for_country(data_for_country, "Ceny zywnosci w Polsce", country, c('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/f66a3c5d4f0db2d66ae92e2e1dd11c3904c3e19b.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="58" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+data_for_country = filter(before_pandemic_data, kraj %in% country)
+plot_for_country(data_for_country, "Ceny zywnosci w Polsce przed pandemią", country, c('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/c1d4c8075f714aadf3b25428fd235d2663ef2ca7.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="59" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+data_for_country = filter(pandemic_data, kraj %in% country)
+plot_for_country(data_for_country, "Ceny żywności w Polsce po rozpoczęciu pandemii", country, c('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/e5b26145c8a83f5549998aa6cfe574d0f29d28e0.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="60" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+data_for_country = filter(before_war_data, kraj %in% country)
+plot_for_country(data_for_country, "Ceny żywności w Polsce przed wojną", country, c('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/1768ab61a966d389dec5f18cf2b2d68511d31f32.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code execution_count="61" vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+data_for_country = filter(war_data, kraj %in% country)
+plot_for_country(data_for_country, "Ceny zywnosci w Polsce tuż po inwazji na Ukrainę", country, c('mieso', 'nabial', 'pieczywo', 'slodycze', 'oleje_i_tluszcze', 'warzywa'))
+```
+
+::: {.output .display_data}
+![](vertopal_9fb522f022ef42c8bf9eedd12b52f615/f11eec0d7ab4306e1d4f9b4f0d17be30278fb6d2.png){height="600"
+width="720"}
+:::
+:::
+
+::: {.cell .code vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+```
+:::
+
+::: {.cell .code vscode="{\"languageId\":\"r\"}"}
+``` {.R}
+```
+:::
