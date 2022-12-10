@@ -129,6 +129,7 @@ deposits_tidy_origin <- rbind(eurozone_countries_deposits_tidy_origin,
 
 # Creating ranges of intervals
 since_2000 <- as.Date("01/01/2000", "%d/%m/%Y")
+since_2005 <- as.Date("01/01/2005", "%d/%m/%Y")
 before_pandemic <- as.Date("01/01/2018", "%d/%m/%Y")
 pandemic <- as.Date("01/03/2020", "%d/%m/%Y")
 before_war <- as.Date("01/02/2021", "%d/%m/%Y")
@@ -140,6 +141,7 @@ now <- as.Date("01/09/2022", "%d/%m/%Y")
 # Split data to intervals
 ### Average data (inflation)
 inflation_avg_since_2000_data <- inflation_avg_tidy %>% filter(Period >= since_2000 & Period <= now)
+inflation_avg_since_2005_data <- inflation_avg_tidy %>% filter(Period >= since_2005 & Period <= now)
 inflation_avg_before_pandemic_data <- inflation_avg_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 inflation_avg_pandemic_data <- inflation_avg_tidy %>% filter(Period >= pandemic & Period < before_war)
 inflation_avg_before_war_data <- inflation_avg_tidy %>% filter(Period >= before_war & Period < war)
@@ -147,6 +149,7 @@ inflation_avg_war_data <- inflation_avg_tidy %>% filter(Period >= war & Period <
 
 ### -- Average data (deposits)
 deposits_avg_since_2000_data <- deposits_avg_tidy %>% filter(Period >= since_2000 & Period <= now)
+deposits_avg_since_2005_data <- deposits_avg_tidy %>% filter(Period >= since_2005 & Period <= now)
 deposits_avg_before_pandemic_data <- deposits_avg_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 deposits_avg_pandemic_data <- deposits_avg_tidy %>% filter(Period >= pandemic & Period < before_war)
 deposits_avg_before_war_data <- deposits_avg_tidy %>% filter(Period >= before_war & Period < war)
@@ -156,6 +159,7 @@ deposits_avg_war_data <- deposits_avg_tidy %>% filter(Period >= war & Period <= 
 
 ### Eurozone (inflation)
 eurozone_inflation_since_2000_data <- eurozone_countries_inflation_tidy %>% filter(Period >= since_2000 & Period <= now)
+eurozone_inflation_since_2005_data <- eurozone_countries_inflation_tidy %>% filter(Period >= since_2005 & Period <= now)
 eurozone_inflation_before_pandemic_data <- eurozone_countries_inflation_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 eurozone_inflation_pandemic_data <- eurozone_countries_inflation_tidy %>% filter(Period >= pandemic & Period < before_war)
 eurozone_inflation_before_war_data <- eurozone_countries_inflation_tidy %>% filter(Period >= before_war & Period < war)
@@ -163,6 +167,7 @@ eurozone_inflation_war_data <- eurozone_countries_inflation_tidy %>% filter(Peri
 
 ### -- Eurozone (deposits)
 eurozone_deposits_since_2000_data <- eurozone_countries_deposits_tidy %>% filter(Period >= since_2000 & Period <= now)
+eurozone_deposits_since_2005_data <- eurozone_countries_deposits_tidy %>% filter(Period >= since_2005 & Period <= now)
 eurozone_deposits_before_pandemic_data <- eurozone_countries_deposits_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 eurozone_deposits_pandemic_data <- eurozone_countries_deposits_tidy %>% filter(Period >= pandemic & Period < before_war)
 eurozone_deposits_before_war_data <- eurozone_countries_deposits_tidy %>% filter(Period >= before_war & Period < war)
@@ -172,6 +177,7 @@ eurozone_deposits_war_data <- eurozone_countries_deposits_tidy %>% filter(Period
 
 ### Countries outside the eurozone (inflation)
 other_inflation_since_2000_data <- other_countries_inflation_tidy %>% filter(Period >= since_2000 & Period <= now)
+other_inflation_since_2005_data <- other_countries_inflation_tidy %>% filter(Period >= since_2005 & Period <= now)
 other_inflation_before_pandemic_data <- other_countries_inflation_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 other_inflation_pandemic_data <- other_countries_inflation_tidy %>% filter(Period >= pandemic & Period < before_war)
 other_inflation_before_war_data <- other_countries_inflation_tidy %>% filter(Period >= before_war & Period < war)
@@ -179,6 +185,7 @@ other_inflation_war_data <- other_countries_inflation_tidy %>% filter(Period >= 
 
 ### -- Countries outside the eurozone (deposits)
 other_deposits_since_2000_data <- other_countries_deposits_tidy %>% filter(Period >= since_2000 & Period <= now)
+other_deposits_since_2005_data <- other_countries_deposits_tidy %>% filter(Period >= since_2005 & Period <= now)
 other_deposits_before_pandemic_data <- other_countries_deposits_tidy %>% filter(Period >= before_pandemic & Period < pandemic)
 other_deposits_pandemic_data <- other_countries_deposits_tidy %>% filter(Period >= pandemic & Period < before_war)
 other_deposits_before_war_data <- other_countries_deposits_tidy %>% filter(Period >= before_war & Period < war)
@@ -188,6 +195,7 @@ other_deposits_war_data <- other_countries_deposits_tidy %>% filter(Period >= wa
 
 ### Origin (inflation)
 inflation_since_2000_data <- inflation_tidy_origin %>% filter(Period >= since_2000 & Period <= now)
+inflation_since_2005_data <- inflation_tidy_origin %>% filter(Period >= since_2005 & Period <= now)
 inflation_before_pandemic_data <- inflation_tidy_origin %>% filter(Period >= before_pandemic & Period < pandemic)
 inflation_pandemic_data <- inflation_tidy_origin %>% filter(Period >= pandemic & Period < before_war)
 inflation_before_war_data <- inflation_tidy_origin %>% filter(Period >= before_war & Period < war)
@@ -195,6 +203,7 @@ inflation_war_data <- inflation_tidy_origin %>% filter(Period >= war & Period <=
 
 ### -- Origin (deposits)
 deposits_since_2000_data <- deposits_tidy_origin %>% filter(Period >= since_2000 & Period <= now)
+deposits_since_2005_data <- deposits_tidy_origin %>% filter(Period >= since_2005 & Period <= now)
 deposits_before_pandemic_data <- deposits_tidy_origin %>% filter(Period >= before_pandemic & Period < pandemic)
 deposits_pandemic_data <- deposits_tidy_origin %>% filter(Period >= pandemic & Period < before_war)
 deposits_before_war_data <- deposits_tidy_origin %>% filter(Period >= before_war & Period < war)
